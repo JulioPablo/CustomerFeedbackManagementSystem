@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CustomerFeedbackManagementSystem.Areas.Identity.Data
+@using System.Security.Claims;
+
+@inject UserManager<CustomerFeedbackManagementSystemUser> UserManager
+@inject SignInManager<CustomerFeedbackManagementSystemUser> SignInManager
+
+@{
+    ViewData["Title"] = "Feedback";
+}
+
+<h1>Feedback</h1>
+
+<span class="AntiForge"> @Html.AntiForgeryToken() </span>
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <span id="UserId" class="d-none">@User.FindFirst(ClaimTypes.NameIdentifier).Value</span>
+}
+
+<form>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="TimeframeFilter" class="control-label">Timeframe</label>
+                <select id="TimeframeFilter" class="form-control">
+                    <option value="">All</option>
+                    <option value="last-day">Last Day</option>
+                    <option value="last-week">Last Week</option>
+                    <option value="last-month">Last Month</option>
+                </select>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="CategoryFilter" class="control-label">Category</label>
+                <select id="CategoryFilter" class="form-control"></select>
+            </div>
+        </div>
+    </div>
+</form>
+<hr />
+
+
+<table id="feedback-table" class="table">
+    <thead>
+        <tr>
+            <th>
+                Feedback Receiver Name
+            </th>
+            <th>
+                UserName
+            </th>
+            <th>
+                Category
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Submission Date
+            </th>
+            <th>Controls</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<hr />
+
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <h2>Add Feedback</h2>
+    <div class="row">
+        <div class="col-md-4">
+            <div id="FeedbackFormErrors"class="d-none alert alert-danger" role="alert">
+            </div>
+            <form>
+                <div class="text-danger"></div>
+                <div class="form-group">
+                    <label for="FeedbackReceiverID" class="control-label">Feedback Receiver</label>
+                    <select id="FeedbackReceiverID" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="Category" class="control-label">Category</label>
+                    <select id="Category" class="form-control"></select>
+                </div>
+                <div class="form-group">
+                    <label for="FeedbackDescription">Description</label>
+                    <textarea class="form-control" id="FeedbackDescription" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <input type="button" id="CreateFeedbackButton" value="Create" class="btn btn-primary" />
+                </div>
+
+                <div id="EditButtonsContainer" class="d-none form-group">
+                    <input id="EditButton" type="button" value="Edit" class="btn btn-warning" />
+                    <input id="CancelEditButton" type="button" value="Cancel" class="btn btn-danger" />
+                </div>
+            </form>
+        </div>
+    </div>
+}
+else
+{
+    <h2>Want to leave some feedback?</h2>
+    <ul>
+        <li class="">
+            <a class="text-dark" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="">
+            <a class="text-dark" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
+}
+
+
+@section Scripts
+{
+    <script type="text/javascript" src="@Url.Content("/js/feedback.js")"></script>
+
+}
